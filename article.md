@@ -44,3 +44,8 @@ If you would like to use Ansible to prepare and publish to CloudFormation, [my c
 
 If there's interest, I'll help to document and polish this module so it can be submitted to Ansible. Just fork and send a pull request.
 
+## Links
+
+* [Resource Types reference](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
+* [CloudFormation example templates](http://aws.amazon.com/cloudformation/aws-cloudformation-templates/)
+* [aws-cli cloudformation reference](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-using-cli.html)
