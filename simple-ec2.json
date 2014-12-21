@@ -1,0 +1,78 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Basic EC2 instance with a basic security group",
+    "Parameters": {},
+    "Mappings": {},
+    "Resources": {
+        "BasicVPC" : {
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {
+                "CidrBlock" : "10.0.0.0/16",
+    	          "EnableDnsSupport" : "true",
+    	          "EnableDnsHostnames" : "true"
+            }
+        },
+        "BasicVPCSubnet": {
+            "Type":"AWS::EC2::Subnet",
+            "DependsOn": ["BasicVPC"],
+            "Properties": {
+              "VpcId": {"Ref":"BasicVPC"},
+              "CidrBlock": "10.0.0.0/24"
+            }
+        },
+				"InstanceSecurity" : {
+				 "Type" : "AWS::EC2::SecurityGroup",
+				 "Properties" : {
+						 "GroupDescription" : "allow ssh,web,mosh from everywhere",
+             "VpcId": { "Ref": "BasicVPC" },
+						 "SecurityGroupIngress" : [
+								 {
+										 "IpProtocol" : "tcp",
+										 "FromPort" : "22",
+										 "ToPort" : "22",
+										 "CidrIp" : "0.0.0.0/0"
+								 },{
+										 "IpProtocol" : "tcp",
+										 "FromPort" : "80",
+										 "ToPort" : "80",
+										 "CidrIp" : "0.0.0.0/0"
+								 },{
+										 "IpProtocol" : "udp",
+										 "FromPort" : "60000",
+										 "ToPort" : "61000",
+										 "CidrIp" : "0.0.0.0/0"
+								 }
+						 ]
+				 }
+				},
+				"Ec2Instance" : {
+					"Type" : "AWS::EC2::Instance", 
+          "DependsOn": ["BasicVPCSubnet"],
+					"Properties" : {
+						"ImageId" : "ami-91c593a1",
+						"KeyName" : "advent2014",
+						"InstanceType" : "t2.small",
+						"Tags": [{ "Key": "Name", "Value": "Demo instance" }],
+            "NetworkInterfaces": [{
+              "AssociatePublicIpAddress": true,
+              "DeviceIndex": "0",
+              "SubnetId": { "Ref":"BasicVPCSubnet" },
+						  "GroupSet" : [{
+                  "Fn::GetAtt" : [ "InstanceSecurity", "GroupId" ]
+              }]
+            }]
+					}
+				}
+    },
+    "Outputs" : {
+        "InstanceDNS" : {
+            "Value" : {
+                "Fn::GetAtt": [
+                    "Ec2Instance",
+                    "PublicDnsName"
+                ]
+            }
+        }
+    }
+}
+

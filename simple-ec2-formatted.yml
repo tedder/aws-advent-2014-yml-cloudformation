@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Basic EC2 instance with a basic security group
+Mappings: {}
+Outputs:
+  InstanceDNS:
+    Value:
+      Fn::GetAtt:
+      - Ec2Instance
+      - PublicDnsName
+Parameters: {}
+Resources:
+  BasicVPC:
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: 'true'
+      EnableDnsSupport: 'true'
+    Type: AWS::EC2::VPC
+  BasicVPCSubnet:
+    DependsOn:
+    - BasicVPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId:
+        Ref: BasicVPC
+    Type: AWS::EC2::Subnet
+  Ec2Instance:
+    DependsOn:
+    - BasicVPCSubnet
+    Properties:
+      ImageId: ami-91c593a1
+      InstanceType: t2.small
+      KeyName: advent2014
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: true
+        DeviceIndex: '0'
+        GroupSet:
+        - Fn::GetAtt:
+          - InstanceSecurity
+          - GroupId
+        SubnetId:
+          Ref: BasicVPCSubnet
+      Tags:
+      - Key: Name
+        Value: Demo instance
+    Type: AWS::EC2::Instance
+  InstanceSecurity:
+    Properties:
+      GroupDescription: allow ssh,web,mosh from everywhere
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      - CidrIp: 0.0.0.0/0
+        FromPort: '80'
+        IpProtocol: tcp
+        ToPort: '80'
+      - CidrIp: 0.0.0.0/0
+        FromPort: '60000'
+        IpProtocol: udp
+        ToPort: '61000'
+      VpcId:
+        Ref: BasicVPC
+    Type: AWS::EC2::SecurityGroup
