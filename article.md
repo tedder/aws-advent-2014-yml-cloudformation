@@ -10,7 +10,7 @@ CloudFormation was launched in 2011. It's fairly daunting to get started with, e
 
 Let's start with a simple CloudFormation template to create an EC2 instance. In this example many things are hardcoded, like the instance type and AMI. This cuts down on the complexity of the example. Still, it's a nontrivial example that creates a VPC and other resources. The only prerequisite for this example is to create a keypair in the US-West-2 region called "advent2014".
 
-    #include simple-ec2.json
+    #include (https://github.com/tedder/aws-advent-2014-yml-cloudformation/blob/master/simple-ec2.json)
 
 As you look at this template, notice both the quirks of CloudFormation (especially "Ref" and "Fn::GetAtt") and the quirks of JSON. Even with some indentation the brackets are complex, and correct comma placement is difficult while editing a template.
 
@@ -22,11 +22,11 @@ Next, let's convert this JSON example to YAML. [There's a quick converter in thi
 
 Since JSON doesn't maintain position of hashes/dicts, the output order may vary. Here's what it looks like immediately after conversion:
 
-    #include simple-ec2.yml
+    #include (https://github.com/tedder/aws-advent-2014-yml-cloudformation/blob/master/simple-ec2.yml)
 
 Only a small amount of reformatting is needed to make this file pleasant: I removed unnecessary quotes, combined some lines, and moved the 'Type' line to the top of each resource.
 
-    #include simple-ec2-formatted.yml
+    #include (https://github.com/tedder/aws-advent-2014-yml-cloudformation/blob/master/simple-ec2-formatted.yml)
 
 ## YAML to JSON to CloudFormation
 
