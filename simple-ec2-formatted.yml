@@ -1,3 +1,4 @@
+---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Basic EC2 instance with a basic security group
 Parameters: {}
@@ -15,7 +16,7 @@ Resources:
     - BasicVPC
     Properties:
       CidrBlock: 10.0.0.0/24
-      VpcId: Ref: BasicVPC
+      VpcId: { Ref: BasicVPC }
   Ec2Instance:
     Type: AWS::EC2::Instance
     DependsOn:
@@ -40,7 +41,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: allow ssh,web,mosh from everywhere
-      VpcId: Ref: BasicVPC
+      VpcId: { Ref: BasicVPC }
       SecurityGroupIngress:
       - CidrIp: 0.0.0.0/0
         FromPort: 22
